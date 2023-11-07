@@ -1,0 +1,6 @@
+# this tasks will execute the local scripts on remote machine
+- name: Running external script
+  ansible.builtin.script: something.sh
+  args:
+    chdir: /home/amitgujar
+  notify: Send_alert

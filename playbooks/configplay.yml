@@ -1,0 +1,9 @@
+- name: Init virtual machine
+  hosts: azure
+  become: true
+
+  tasks:
+    - name: Configuring the machine
+      ansible.builtin.import_role:
+        name: vm
+        tasks_from: config.yml

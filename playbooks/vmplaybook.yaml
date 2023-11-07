@@ -1,0 +1,15 @@
+- name: Init virtual machine
+  hosts: localhost
+  become: true
+
+  vars_prompt:
+    - name: vm_count
+      prompt: "Enter the number of vm  "
+      private: false
+
+    - name: resource_name
+      prompt: "Enter resource group name "
+      private: false
+
+  roles:
+    - vm

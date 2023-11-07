@@ -1,0 +1,98 @@
+# tasks file for vm creation
+- name: Creating a resource group
+  azure.azcollection.azure_rm_resourcegroup:
+    name: "{{ vm_resource_group }}"
+    location: "{{ vm_location }}"
+    force_delete_nonempty: true
+    tags:
+      Exp: "{{ vm_days_to_keep }}"
+  notify: Send_alert
+
+- name: Creating a virtual network
+  azure.azcollection.azure_rm_virtualnetwork:
+    name: "{{ vm_virtual_network }}"
+    resource_group: "{{ vm_resource_group }}"
+    location: "{{ vm_location }}"
+    address_prefixes: "{{ vm_vnet_address_prefixes }}"
+
+- name: Creating a subnet
+  azure.azcollection.azure_rm_subnet:
+    name: "{{ vm_subnet_name }}-{{ '%03d' | format(item.0|int) }}"
+    resource_group: "{{ vm_resource_group }}"
+    virtual_network: "{{ vm_virtual_network }}"
+    address_prefix: "10.0.{{ item.0 | int }}.0/24"
+  with_sequence: start=1 end="{{ vm_count }}"
+  register: subnet
+
+- name: Generating Public IPs
+  azure.azcollection.azure_rm_publicipaddress:
+    name: "{{ vm_public_ip }}-{{ '%03d' | format(item.0|int) }}"
+    resource_group: "{{ vm_resource_group }}"
+    allocation_method: Static
+  with_sequence: start=1 end="{{ vm_count }}"
+  register: public_ip
+
+- name: Creating NSG
+  azure.azcollection.azure_rm_securitygroup:
+    name: "{{ vm_nsg_name }}"
+    resource_group: "{{ vm_resource_group }}"
+    rules:
+      - name: 'Allow_SSH'
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 100
+        direction: Inbound
+      - name: 'Allow_web_traffic'
+        protocol: Tcp
+        destination_port_range:
+          - 80
+          - 443
+        access: Allow
+        priority: 101
+        direction: Inbound
+
+- name: Creating NIC
+  azure.azcollection.azure_rm_networkinterface:
+    name: "{{ vm_nic_name }}-{{ '%03d' | format(item.0|int) }}"
+    resource_group: "{{ vm_resource_group }}"
+    virtual_network: "{{ vm_virtual_network }}"
+    subnet: "{{ vm_subnet_name }}-{{ '%03d' | format(item.0|int) }}"
+    security_group: "{{ vm_nsg_name }}"
+    ip_configurations:
+      - name: default
+        public_ip_address_name: "{{ vm_public_ip }}-{{ '%03d' | format(item.0|int) }}"
+        primary: true
+  with_sequence: start=1 end="{{ vm_count }}"
+  register: nic
+
+- name: Finally....
+  azure.azcollection.azure_rm_virtualmachine:
+    name: "{{ vm_name }}{{ '%1d' | format(item.0|int) }}"
+    resource_group: "{{ vm_resource_group }}"
+    vm_size: "Standard_{{ vm_size }}"
+    admin_username: "{{ vm_admin_username }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/{{ vm_admin_username }}/.ssh/authorized_keys
+        key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    network_interfaces: "{{ vm_nic_name }}-{{ '%03d' | format(item.0|int) }}"
+    image:
+      offer: 0001-com-ubuntu-server-jammy
+      publisher: Canonical
+      sku: '22_04-lts'
+      version: latest
+  with_sequence: start=1 end="{{ vm_count }}"
+
+- name: Connect to machines using these strings
+  ansible.builtin.debug:
+    msg: "ssh {{ vm_admin_username }}@{{ item.state.ip_address }}"
+  with_items: "{{ public_ip.results }}"
+  loop_control:
+    label: "{{ item.state.name }}"
+  register: ssh_strings
+
+
+- name: End of Playbook
+  ansible.builtin.meta: end_play
+  when: ssh_strings is defined

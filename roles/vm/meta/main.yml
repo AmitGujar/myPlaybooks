@@ -1,0 +1,19 @@
+galaxy_info:
+  author: Amit Gujar
+  description: This role will create an virtual machine on the azure portal and install some tools on it.
+  company: zyxware
+
+  license: MIT
+
+  min_ansible_version: "2.1"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+
+  galaxy_tags:
+    - azure
+    - virtualmachin
+    - configuration
+    - install
