@@ -3,3 +3,9 @@
     url: "{{ vm_alert_url }}"
     method: POST
     body: "VM is configured 🎉"
+
+- name: Delete_alert
+  ansible.builtin.uri:
+    url: "{{ vm_alert_url }}"
+    method: POST
+    body: "Everything is deleted"

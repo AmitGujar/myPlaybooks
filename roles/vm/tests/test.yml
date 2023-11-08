@@ -1,11 +1,22 @@
+# this file is used to test the collection 
 - name: Collection test
   hosts: localhost
   remote_user: root
-  ansible.builtin.collections:
-    - amitgujar0.azure_resources_custom
+
+  vars_prompt:
+    - name: delete_resources
+      prompt: "Do you want to delete everything "
+      private: false
+
+    - name: vm_count
+      prompt: "Enter the number of vm  "
+      private: false
+
+    - name: resource_name
+      prompt: "Enter resource group name "
+      private: false
 
   vars:
-    vm_resource_group: "rg-nice-001"
     vm_location: "centralindia"
     vm_name: "machine"
     vm_virtual_network: "vnet-nice"
@@ -18,7 +29,5 @@
     vm_size: B1s
     vm_admin_username: amitgujar
 
-  tasks:
-    - name: Creating virtual machine
-      ansible.builtin.include_role:
-        name: vm
+  roles:
+    - amitgujar0.azure_resources_custom.vm

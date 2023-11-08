@@ -1,4 +1,8 @@
 # tasks file for vm creation
+- name: Killing your existing vm
+  ansible.builtin.import_tasks:
+    file: killvm.yml
+
 - name: Creating a resource group
   azure.azcollection.azure_rm_resourcegroup:
     name: "{{ vm_resource_group }}"

@@ -1,0 +1,13 @@
+- name: Deleting everything
+  azure.azcollection.azure_rm_resourcegroup:
+    name: "{{ vm_resource_group }}"
+    location: "{{ vm_location }}"
+    force_delete_nonempty: true
+    state: absent
+  when: delete_resources == 'yes'
+  notify: Delete_alert
+  register: delete
+
+- name: End of Playbook
+  ansible.builtin.meta: end_play
+  when: delete is defined and delete.skipped is not defined

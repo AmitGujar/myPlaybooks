@@ -3,6 +3,10 @@
   become: true
 
   vars_prompt:
+    - name: delete_resources
+      prompt: "Do you want to delete everything "
+      private: false
+
     - name: vm_count
       prompt: "Enter the number of vm  "
       private: false
