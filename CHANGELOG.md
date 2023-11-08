@@ -10,3 +10,7 @@
 ## v1.0.2
 - Added support for deletion of resource group
 - Takes input from the user
+
+## v1.0.3
+- README.md updated.
+- Updated the test file for environment.

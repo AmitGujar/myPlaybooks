@@ -17,17 +17,19 @@
       private: false
 
   vars:
+    vm_resource_group: "rg-{{ resource_name }}-001"
     vm_location: "centralindia"
     vm_name: "machine"
-    vm_virtual_network: "vnet-nice"
-    vm_public_ip: "pip-nice"
-    vm_nsg_name: "nsg-machine1-001"
-    vm_subnet_name: "subnet-machine1"
-    vm_nic_name: "nic-machine1"
+    vm_virtual_network: "vnet-{{ resource_name }}"
+    vm_public_ip: "pip-{{ resource_name }}"
+    vm_nsg_name: "nsg-{{ vm_name }}-001"
+    vm_subnet_name: "subnet-{{ vm_name }}"
+    vm_nic_name: "nic-{{ vm_name }}"
     vm_vnet_address_prefixes: "10.0.0.0/16"
     vm_days_to_keep: "3"
     vm_size: B1s
     vm_admin_username: amitgujar
+
 
   roles:
     - amitgujar0.azure_resources_custom.vm
