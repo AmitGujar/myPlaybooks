@@ -92,7 +92,6 @@
     label: "{{ item.state.name }}"
   register: ssh_strings
 
-
 - name: End of Playbook
   ansible.builtin.meta: end_play
   when: ssh_strings is defined

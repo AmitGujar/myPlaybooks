@@ -3,9 +3,3 @@
     url: "{{ vm_alert_url }}"
     method: POST
     body: "VM is configured 🎉"
-
-- name: Send_report
-  ansible.builtin.uri:
-    url: "{{ vm_alert_url }}"
-    method: POST
-    body: "tools are installed 🎉"
