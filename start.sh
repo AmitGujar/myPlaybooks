@@ -1,5 +1,5 @@
 #!/bin/bash
-# ansible-playbook playbooks/vmplaybook.yaml $1
+ansible-playbook playbooks/vmplaybook.yaml $1
 echo "executing the config task"
 if [ $? -eq 0 ]; then
     ansible-playbook playbooks/configplay.yml
