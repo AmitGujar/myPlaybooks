@@ -18,6 +18,7 @@ pip3 install -r /usr/lib/python3/dist-packages/ansible_collections/azure/azcolle
 Role Variables
 --------------
 [/vars/main.yml]
+```
 - vm_resource_group: "rg-{{ resource_name }}-001"
 - vm_location: "centralindia"
 - vm_name: "machine"
@@ -35,7 +36,7 @@ Role Variables
 - resource_name
 - vm_count
 - delete_resources [bool value => yes/no ]
-
+```
 <!-- Dependencies
 ------------
 
