@@ -1,3 +1,4 @@
 **/defaults/main.yml
 *.gz
 .env
+init
