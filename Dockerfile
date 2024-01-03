@@ -26,4 +26,4 @@ CMD echo "[default]" > ~/.azure/credentials && \
     echo "secret = $AZURE_SECRET" >> ~/.azure/credentials && \
     echo "tenant = $AZURE_TENANT" >> ~/.azure/credentials && \
     echo "$SSH_PUBLIC_KEY" > ~/.ssh/id_rsa.pub && \
-    ansible-playbook playbooks/vmplaybook.yaml
+    bash ./run.sh
