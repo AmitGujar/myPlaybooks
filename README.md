@@ -1,4 +1,7 @@
-## How to use
+### How to use as role
+- Refer to the ansible-galaxy link for more details.
+
+### How to use docker image
 
 - Create vm in default values then you can use latest tag.
 
