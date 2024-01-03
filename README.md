@@ -6,7 +6,7 @@
 
 - Create vm using custom values then you can use alpha tag
 
-``` docker run --env-file .env amitgujar/ansible:alpha ```
+``` docker run -it --env-file .env amitgujar/ansible:alpha ```
 
 ### Requirements
 
